@@ -4,7 +4,11 @@ import { View, Text, StyleSheet, TextInput, Pressable } from "react-native";
 
 import * as Animatable from "react-native-animatable";
 
+import { useNavigation } from '@react-navigation/native';
+
 export default function Login() {
+
+    const navigation = useNavigation();
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -15,23 +19,24 @@ export default function Login() {
     const onChangeEmailHandler = (email) => {
         setEmail(email);
     };
-
     const handleLogin = async () => {
         try {
-            const response = await axios.post("http://localhost:8080/api/login", {
-                email,
-                password,
-            },
-                {
-                    headers: { 'content-type': 'text/json' }
-                });
-            // Handle the response, store tokens, navigate to the next screen, etc.
-            console.log(response.data);
+            const response = await axios.post("http://localhost:8080/api/v1/login", {
+                email: email,
+                password: password,
+            });
+
+            console.log(response.data)
+            navigation.navigate('Invoices');
+
+
+            // window.location.replace(`http://localhost:8080/api/v1/dashboard`);
         } catch (error) {
-            console.error("Login error:", error.response.data);
-            // Handle login error (display a message, etc.)
-        }
+            console.error("Login error:", error);
+        };
     };
+
+
 
 
 
