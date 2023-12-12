@@ -26,8 +26,9 @@ export default function Login() {
                 password: password,
             });
 
-            console.log(response.data)
-            navigation.navigate('Invoices');
+            const userToken = (response.data.token);
+            navigation.navigate('Invoices', { token: userToken });
+            // console.log(userToken);
 
 
             // window.location.replace(`http://localhost:8080/api/v1/dashboard`);
