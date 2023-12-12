@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 import {
     View,
     Text,
@@ -11,19 +12,28 @@ import * as Animatable from "react-native-animatable";
 
 import { useNavigation } from "@react-navigation/native";
 
-export default function Invoices() {
+export default function Invoices({ route }) {
     const navigation = useNavigation();
+    const { token } = route.params;
+
+
+    const getInvoices = async (userToken) => {
+        try {
+            response = await axios.get('http://localhost:8000/api/invoices', {
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                }
+            });
+            console.log(response.data);
+            // Do something with the invoice data
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
+
     return (
         <View style={styles.container}>
-
-            <View style={styles.containerLogo}>
-                <Animatable.Image
-                    animation="flipInY"
-                    source={require('../../images/inuarLogo.png')}
-                    style={{ width: '40%', height: '40%' }}
-                    resizeMode="contain"
-                />
-            </View>
 
             <Animatable.View delay={600} animation="fadeInUp" style={styles.containerForm}>
                 <Text style={styles.title}>Todas as suas invoices aqui!</Text>
@@ -31,9 +41,10 @@ export default function Invoices() {
 
                 <TouchableOpacity
                     style={styles.button}
-                    onPress={() => navigation.navigate('Login')}
+                    onPress={() => getInvoices(token)}
                 >
-                    <Text style={styles.buttonText}>Ver</Text>
+                    <Text style={styles.buttonText}
+                    >Listar Invoices</Text>
                 </TouchableOpacity>
             </Animatable.View>
 
@@ -44,20 +55,11 @@ export default function Invoices() {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'red'
     },
-    containerLogo: {
-        backgroundColor: '',
-        flex: 2,
-        justifyContent: 'center',
-        alignItems: 'center',
 
-    },
     containerForm: {
         flex: 1,
         backgroundColor: '#fff',
-        borderTopLeftRadius: 25,
-        borderTopRightRadius: 25,
         paddingStart: '5%',
         paddingEnd: '5%'
     },
